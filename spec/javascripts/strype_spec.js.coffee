@@ -19,3 +19,17 @@ describe "Strype", ->
     it "should not throw an error if card number is provided", ->
       expect(() -> new Strype.Card {card_number: 'xxx'}).not.toThrow()
 
+  describe "Card Number Validation", ->
+
+    it "should return false if the card number is invalid", ->
+      @card = new Strype.Card card_number: 'xxx'
+      expect(@card.valid_number()).toBe false
+    
+    it "should return true if the card number is valid", ->
+      @card = new Strype.Card card_number: '4242424242424242'
+      expect(@card.valid_number()).toBe true
+    
+    it "should return true if the card number is valid", ->
+      @card = new Strype.Card card_number: '4292810674576773'
+      expect(@card.valid_number()).toBe true
+
