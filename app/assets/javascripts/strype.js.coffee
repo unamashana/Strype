@@ -24,8 +24,9 @@ Strype.Charge.prototype = {
       type: 'POST',
       contentType: 'application/json',
       success: () ->
-        console.log 'success'
         options.success?.call()
+      error: () ->
+        options.error?.call()
     )
 
 }

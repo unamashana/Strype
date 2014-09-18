@@ -62,7 +62,8 @@ describe "Strype", ->
     beforeEach ->
       @card = new Strype.Card card_number: 'xxxx'
       @charge = new Strype.Charge card: @card, amount: 10
-      @callback = jasmine.createSpy('callback')
+      @success_callback = jasmine.createSpy('success_callback')
+      @error_callback = jasmine.createSpy('error_callback')
       @server = sinon.fakeServer.create()
 
     afterEach ->
@@ -72,11 +73,26 @@ describe "Strype", ->
       @server.respondWith("POST", "/charges", [
         201, {"Content-Type":"application/json"}, '[{ "id": 12, "comment": "Hey there" }]'
       ])
-      @charge.create(success: @callback)
+      @charge.create(success: @success_callback)
       @server.respond()
-      expect(@callback).toHaveBeenCalled()
+      expect(@success_callback).toHaveBeenCalled()
+      expect(@error_callback).not.toHaveBeenCalled()
+      
+    it "should call the failure handler when charge fails", ->
+      @server.respondWith("POST", "/charges", [
+        402, {"Content-Type":"application/json"}, '[{ "error": "cannot process charge"}]'
+      ])
+      @charge.create(success: @success_callback, error: @error_callback)
+      @server.respond()
+      expect(@success_callback).not.toHaveBeenCalled()
+      expect(@error_callback).toHaveBeenCalled()
       
       
+      
+      
+
+
+
       
       
 
