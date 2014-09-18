@@ -8,9 +8,6 @@ Strype.Card = (options) ->
 Strype.Card.prototype = {
 
   valid_number: () ->
-    if @card_number == "4242424242424242"
-      return true
-    else 
-      return false
+    LuhnCheck.check @card_number
 
 }

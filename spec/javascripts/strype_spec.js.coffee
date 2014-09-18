@@ -33,3 +33,26 @@ describe "Strype", ->
       @card = new Strype.Card card_number: '4292810674576773'
       expect(@card.valid_number()).toBe true
 
+
+    describe "Implementation", ->
+
+      it "should return true if LuhnCheck returns true", ->
+        mock = sinon.mock(LuhnCheck)
+        mock.expects("check").withArgs("xxx").returns(true)
+
+        @card = new Strype.Card card_number: 'xxx'
+        expect(@card.valid_number()).toBe true
+
+        mock.verify()
+        mock.restore()
+
+      it "should return false if LuhnCheck returns false", ->
+        mock = sinon.mock(LuhnCheck)
+        mock.expects("check").withArgs("xxx").returns(false)
+
+        @card = new Strype.Card card_number: 'xxx'
+        expect(@card.valid_number()).toBe false
+
+        mock.verify()
+        mock.restore()
+
