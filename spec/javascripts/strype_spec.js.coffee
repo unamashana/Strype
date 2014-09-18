@@ -59,17 +59,21 @@ describe "Strype", ->
 
   describe "Charge", ->
 
-    it "should call the success handler when charge succeeds", ->
+    beforeEach ->
       @card = new Strype.Card card_number: 'xxxx'
       @charge = new Strype.Charge card: @card, amount: 10
       @callback = jasmine.createSpy('callback')
-      
-      server = sinon.fakeServer.create()
-      server.respondWith("POST", "/charges", [
+      @server = sinon.fakeServer.create()
+
+    afterEach ->
+      @server.restore()
+
+    it "should call the success handler when charge succeeds", ->
+      @server.respondWith("POST", "/charges", [
         201, {"Content-Type":"application/json"}, '[{ "id": 12, "comment": "Hey there" }]'
       ])
       @charge.create(success: @callback)
-      server.respond()
+      @server.respond()
       expect(@callback).toHaveBeenCalled()
       
       
