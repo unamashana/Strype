@@ -9,5 +9,23 @@ Strype.Card.prototype = {
 
   valid_number: () ->
     LuhnCheck.check @card_number
+}
+
+Strype.Charge = (options) ->
+  @card = options.card
+  @amount = options.amount
+
+Strype.Charge.prototype = {
+
+  create: (options) ->
+    $.ajax(
+      url: "/charges",
+      data: JSON.stringify(card: {number: @card.card_number, amount: @amount}),
+      type: 'POST',
+      contentType: 'application/json',
+      success: () ->
+        console.log 'success'
+        options.success?.call()
+    )
 
 }

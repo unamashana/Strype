@@ -56,3 +56,25 @@ describe "Strype", ->
         mock.verify()
         mock.restore()
 
+
+  describe "Charge", ->
+
+    it "should call the success handler when charge succeeds", ->
+      @card = new Strype.Card card_number: 'xxxx'
+      @charge = new Strype.Charge card: @card, amount: 10
+      @callback = jasmine.createSpy('callback')
+      
+      server = sinon.fakeServer.create()
+      server.respondWith("POST", "/charges", [
+        201, {"Content-Type":"application/json"}, '[{ "id": 12, "comment": "Hey there" }]'
+      ])
+      @charge.create(success: @callback)
+      server.respond()
+      expect(@callback).toHaveBeenCalled()
+      
+      
+      
+      
+
+
+
